@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   //   const { uri } = await request.json();
   try {
     const formData = await request.formData();
-    const audioFile = formData.get("file") as any;
+    const audioFile = (formData as any).get("file");
 
     // if (!audioFile || !(audioFile instanceof File)) {
     //   return Response.json(
