@@ -11,7 +11,14 @@ export default function RootLayout() {
           title: "New Recording",
           presentation: "modal",
           headerLeft: () => {
-            return <Ionicons name='close' size={24} color='black' />;
+            return (
+              <Ionicons
+                name='close'
+                size={24}
+                color='black'
+                onPress={() => router.back()}
+              />
+            );
           },
         }}
       />
