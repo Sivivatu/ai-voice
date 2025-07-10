@@ -1,50 +1,85 @@
-# Welcome to your Expo app 👋
+# AI Voice Recorder
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is an [Expo](https://expo.dev) app for recording, transcribing, and playing back audio notes, with cloud storage and AI-powered transcription. The initial build followed the [Galaxies.dev YouTube tutorial](https://www.youtube.com/watch?v=86iUP4fwl8c&list=TLPQMTMxMTIwMjSM1_-9RydWdQ&index=59) and is based on the [reference repository](https://github.com/Galaxies-dev/ai-voice-recorder/tree/main).
 
-## Get started
+## Features
 
-1. Install dependencies
+- Record audio notes and save them to the cloud (Firebase)
+- Transcribe audio using OpenAI's API
+- Playback recordings using the new `expo-audio` package
+- File-based routing with `expo-router`
+- Toast notifications with `sonner-native`
+- Analytics and session replay with PostHog (if configured)
+- Modern Expo SDK and TypeScript support
 
-   ```bash
-   npm install
-   ```
+## Getting Started
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Install dependencies
 
 ```bash
-npm run reset-project
+pnpm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+or
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 2. Set up environment variables
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Copy `.env.example` to `.env` and fill in your Firebase, OpenAI, and (optionally) PostHog credentials.
 
-## Join the community
+```bash
+cp .env.example .env
+```
 
-Join our community of developers creating universal apps.
+### 3. Start the app
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+pnpm expo start
+```
+
+or
+
+```bash
+npx expo start
+```
+
+You can open the app in:
+
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go) (for basic features)
+
+### 4. Build for production
+
+```bash
+pnpm expo prebuild
+pnpm expo run:android
+pnpm expo run:ios
+```
+
+## Project Structure
+
+- `app/` — Main app screens and API routes (file-based routing)
+- `components/ui/AudioPlayer.tsx` — Audio playback component using `expo-audio`
+- `utils/` — Firebase config and other utilities
+- `.env.example` — Example environment variables
+
+## Reference & Credits
+
+- [Galaxies.dev YouTube Tutorial](https://www.youtube.com/watch?v=86iUP4fwl8c&list=TLPQMTMxMTIwMjSM1_-9RydWdQ&index=59)
+- [Reference GitHub Repository](https://github.com/Galaxies-dev/ai-voice-recorder/tree/main)
+- [Expo Documentation](https://docs.expo.dev/)
+- [expo-audio Documentation](https://docs.expo.dev/versions/latest/sdk/audio/)
+
+## Community
+
+- [Expo on GitHub](https://github.com/expo/expo)
+- [Expo Discord](https://chat.expo.dev)
+
+---
+
+Feel free to contribute or open issues!

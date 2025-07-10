@@ -17,7 +17,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.sivivatu.aivoice"
+      "package": "com.sivivatu.aivoice",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -25,7 +29,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      ["expo-router", { "origin": "https://databard.co.uk" }],
+      [
+        "expo-router",
+        {
+          "origin": "https://databard.co.uk"
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -45,6 +54,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://databard.co.uk"
+      },
+      "eas": {
+        "projectId": "0bd570b5-a98a-46e9-8ede-8ceeec66db09"
+      }
     }
   }
 }
