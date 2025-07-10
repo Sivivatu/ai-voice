@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -9,6 +10,7 @@ import {
 } from "react-native";
 import { toast } from "sonner-native";
 import AudioPlayer from "../components/ui/AudioPlayer";
+import { FIREBASE_DB, NOTE_COLLECTION } from "../utils/firebaseConfig";
 // import { useState, useEffect } from "react";
 
 const Page = () => {
@@ -20,11 +22,6 @@ const Page = () => {
   console.log("🚀 ~ Page ~ ", uri);
 
   useEffect(() => {
-    // if (!uri) {
-    //   console.error("No URI provided for audio playback.");
-    //   return;
-    // }
-
     handleTrascription();
   }, [uri]);
 
@@ -50,8 +47,10 @@ const Page = () => {
         },
         body: formData,
       }).then((response) => response.json());
+
       console.log("Transcription response:", response);
       setTranscription(response.text || "No transcription available");
+
       toast.success("Transcription completed successfully!");
     } catch (error) {
       console.error("Error transcribing audio:", error);
@@ -63,6 +62,16 @@ const Page = () => {
 
   const handleSave = () => {
     console.log("Saving transcription:", transcription);
+    addDoc(collection(FIREBASE_DB, NOTE_COLLECTION), {
+      preview:
+        (transcription ?? "").length > 40
+          ? (transcription ?? "").slice(0, 40) + "..."
+          : transcription ?? "",
+      transcription,
+      createdAt: serverTimestamp(),
+    });
+
+    router.dismissAll();
   };
 
   return (
@@ -70,7 +79,7 @@ const Page = () => {
       <TextInput
         style={styles.transcriptionInput}
         multiline
-        value={transcription}
+        value={transcription ?? ""}
         onChangeText={setTranscription}
         placeholder='Transcription will appear here...'
         editable={!isLoading}
