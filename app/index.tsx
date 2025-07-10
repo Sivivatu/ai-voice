@@ -1,16 +1,40 @@
+import ListItem from "@/components/ui/ListItem";
+import { FIREBASE_DB, NOTE_COLLECTION } from "@/utils/firebaseConfig";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AudioModule, RecordingPresets, useAudioRecorder } from "expo-audio";
 import { useRouter } from "expo-router";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isRecording, setIsRecording] = useState(false);
   const router = useRouter();
+  const [notes, setNotes] = useState<any[]>([]); // Initialize with an empty array
 
   const { bottom } = useSafeAreaInsets();
+
+  useEffect(() => {
+    const notesCollection = collection(FIREBASE_DB, NOTE_COLLECTION);
+    const q = query(notesCollection, orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const notes = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      // console.log("Notes updated:", notes);
+      setNotes(notes);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const startRecording = async () => {
     await audioRecorder.prepareToRecordAsync();
@@ -50,9 +74,19 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      {/* TODO: Render items in recording list */}
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-      <View style={[styles.buttonContainer, { bottom }]}>
+      <FlatList
+        data={notes}
+        renderItem={({ item }) => (
+          <ListItem
+            id={item.id}
+            preview={item.preview}
+            createdAt={item.createdAt?.toDate()}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+      <View style={[styles.buttonContainer, { bottom: bottom }]}>
         <TouchableOpacity
           onPress={isRecording ? stopRecording : startRecording}
           style={[
@@ -74,12 +108,10 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   buttonContainer: {
     position: "absolute",
-    alignItems: "center",
+    alignSelf: "center",
   },
   recordButton: {
     width: 70,
@@ -93,5 +125,9 @@ const styles = StyleSheet.create({
   },
   notRecordingButton: {
     backgroundColor: "#4444ff",
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: "#ccc",
   },
 });
